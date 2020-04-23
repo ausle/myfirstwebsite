@@ -1,0 +1,84 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+
+
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:spring/application-*.xml</param-value>
+  </context-param>
+
+    <!--
+      请求编码和响应编码均设置为UTF-8
+    -->
+    <!--<filter>-->
+      <!--<filter-name>characterEncodingFilter</filter-name>-->
+      <!--<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>-->
+      <!--<init-param>-->
+        <!--<param-name>encoding</param-name>-->
+        <!--<param-value>utf-8</param-value>-->
+      <!--</init-param>-->
+      <!--<init-param>-->
+        <!--<param-name>forceEncoding</param-name>-->
+        <!--<param-value>true</param-value>-->
+      <!--</init-param>-->
+    <!--</filter>-->
+
+    <!--<filter-mapping>-->
+      <!--<filter-name>characterEncodingFilter</filter-name>-->
+      <!--<url-pattern>/*</url-pattern>-->
+    <!--</filter-mapping>-->
+
+
+
+
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+
+
+
+
+
+
+  <servlet>
+    <servlet-name>dispatcher</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+
+    <!--
+        若不配置contextConfigLocation配置文件路径，默认路径为：
+          /WEB-INF/servletName-servlet.xml
+    -->
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:spring/springmvc.xml</param-value>
+    </init-param>
+
+    <!--<init-param>-->
+    <!--<param-name>contextAttribute</param-name>-->
+    <!--<param-value>xxxxx</param-value>-->
+    <!--</init-param>-->
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+
+  <servlet-mapping>
+    <servlet-name>dispatcher</servlet-name>
+    <!--
+      (1)
+        当匹配路径为"/*"时，最终都会转发到一个jsp页面。
+        而DispatcherServlet无法为该jsp请求，匹配对应的handler。
+
+      (2)
+        匹配路径为"/"，所有请求都会匹配。所以要为静态资源配置不让前端控制器来解析。
+        使用此种方式可以实现RESTful风格的url。
+    -->
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+
+</web-app>

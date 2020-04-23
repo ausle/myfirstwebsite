@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+
+
+
+        <!--
+            在解析mvc:annotation-driven时，会尝试去注册messageConverter。
+            若该标签下有message-converters的子标签，会把其中添加的messageConverter手动的进行注册。
+            默认情况下，mvc:message-converters标签的register-defaults为true，所以也会默认的添加一些消息消息转换。
+        -->
+       <mvc:annotation-driven>
+           <mvc:message-converters>
+               <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                   <property name="supportedMediaTypes">
+                       <list>
+                           <value>text/plain;charset=UTF-8</value>
+                           <value>text/html;charset=UTF-8</value>
+                       </list>
+                   </property>
+               </bean>
+               <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+                   <property name="supportedMediaTypes">
+                       <list>
+                           <value>application/json;charset=UTF-8</value>
+                       </list>
+                   </property>
+               </bean>
+           </mvc:message-converters>
+       </mvc:annotation-driven>
+
+        <context:component-scan base-package="com.asule.controller"/>
+
+
+
+
+        <!--视图解析器-->
+        <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+
+                <property name="prefix" value="/WEB-INF/jsp/"/>
+                <property name="suffix" value=".jsp"/>
+
+        </bean>
+
+        <!-- 文件上传 -->
+        <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+            <property name="maxUploadSize" value="10485760"/> <!-- 10m -->
+            <property name="maxInMemorySize" value="4096" />
+            <property name="defaultEncoding" value="UTF-8"></property>
+        </bean>
+
+
+
+</beans>
+
+
+
+
+
