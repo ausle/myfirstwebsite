@@ -91,16 +91,16 @@ public class Test0 {
     @Test
     public void test4(){
 
-        String testStr="";
-
-        boolean blank = StringUtils.isBlank(testStr);
-        boolean notBlank = StringUtils.isNotBlank(testStr);
-        boolean empty = StringUtils.isEmpty(testStr);
-
-
-        System.out.println("blank="+blank);
-        System.out.println("notBlank="+notBlank);
-        System.out.println("empty="+empty);
+//        String testStr="";
+//
+//        boolean blank = StringUtils.isBlank(testStr);
+//        boolean notBlank = StringUtils.isNotBlank(testStr);
+//        boolean empty = StringUtils.isEmpty(testStr);
+//
+//
+//        System.out.println("blank="+blank);
+//        System.out.println("notBlank="+notBlank);
+//        System.out.println("empty="+empty);
     }
 
 
@@ -109,11 +109,11 @@ public class Test0 {
     @Test
     public void test5() throws IOException {
 
-        File targetFile = new File(path,"qr-1587528536642.png");
-        try {
-            FTPUtil.uploadFile(Lists.newArrayList(targetFile));
-        } catch (IOException e) {
-        }
+//        File targetFile = new File(path,"qr-1587528536642.png");
+//        try {
+//            FTPUtil.uploadFile(Lists.newArrayList(targetFile));
+//        } catch (IOException e) {
+//        }
     }
 
 
