@@ -11,6 +11,9 @@
     <param-value>classpath:spring/application-*.xml</param-value>
   </context-param>
 
+
+
+
     <!--
       请求编码和响应编码均设置为UTF-8
     -->
@@ -35,13 +38,37 @@
 
 
 
+  <filter>
+    <filter-name>firstfilter</filter-name>
+    <filter-class>com.asule.filter.FirstFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>firstfilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+
+
+  <!--使用spring-session配置的filter-->
+  <!--<filter>-->
+    <!--<filter-name>springSessionRepositoryFilter</filter-name>-->
+    <!--<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
+    <!--</filter>-->
+    <!--<filter-mapping>-->
+    <!--<filter-name>springSessionRepositoryFilter</filter-name>-->
+    <!--<url-pattern>*.do</url-pattern>-->
+  <!--</filter-mapping>-->
+
+
+
   <listener>
-    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    <listener-class>com.asule.listener.CloudfiApplicationContextListener</listener-class>
   </listener>
 
 
-
-
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
 
 
 

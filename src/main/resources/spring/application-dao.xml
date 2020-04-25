@@ -7,13 +7,11 @@
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
 
 
-
         <!--扫描dao包下组件，使该包下注解可用-->
         <context:component-scan base-package="com.asule.dao"/>
 
         <!---->
         <context:property-placeholder location="classpath:datasource.properties"/>
-
 
         <!--配置数据源-->
         <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">

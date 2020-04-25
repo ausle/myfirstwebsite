@@ -29,6 +29,7 @@ public class ShippingController {
         if(user ==null){
             return ServerResponse.createError(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
+
         return iShippingService.add(user.getId(),shipping);
     }
 

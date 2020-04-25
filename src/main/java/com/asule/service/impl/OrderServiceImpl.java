@@ -167,7 +167,6 @@ public class OrderServiceImpl implements IOrderService{
             orderMapper.updateByPrimaryKeySelective(order);
         }
 
-
         //生成支付数据并插入
         PayInfo payInfo = new PayInfo();
         payInfo.setUserId(order.getUserId());

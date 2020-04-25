@@ -6,12 +6,18 @@ import com.asule.common.ResponseCode;
 import com.asule.common.ServerResponse;
 import com.asule.entity.User;
 import com.asule.service.ICartService;
+import com.asule.utils.CookUtils;
+import com.asule.utils.JsonUtil;
+import com.asule.utils.RedisPoolUtil;
 import com.asule.vo.CartVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -34,11 +40,17 @@ public class CartController {
         return iCartService.list(user.getId());
     }
 
-    @RequestMapping("add")
+    @RequestMapping("add.do")
     @ResponseBody
-    public ServerResponse<CartVo> add(HttpSession session, Integer count, Integer productId){
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
-        if(user ==null){
+    public ServerResponse<CartVo> add(HttpServletRequest request,
+                                       Integer count, Integer productId){
+        String loginCookieValue= CookUtils.readLoginToken(request);
+        if(StringUtils.isEmpty(loginCookieValue)){
+            return ServerResponse.createError("用户未登录,无法获取当前用户的信息");
+        }
+        String loginUserJson = RedisPoolUtil.get(loginCookieValue);
+        User user= JsonUtil.string2Obj(loginUserJson,User.class);
+        if (user==null){
             return ServerResponse.createError(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
         return iCartService.add(user.getId(),productId,count);

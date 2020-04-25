@@ -7,6 +7,8 @@ import com.asule.dao.UserMapper;
 import com.asule.entity.User;
 import com.asule.service.IUserService;
 import com.asule.utils.MD5Util;
+import com.asule.utils.RedisPoolUtil;
+import com.asule.utils.ShardRedisPoolUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -19,6 +21,8 @@ import java.util.UUID;
  */
 @Service
 public class UserServiceImpl implements IUserService{
+
+    public static final String TOKEN_PREFIX = "token_";
 
     @Autowired
     private UserMapper userMapper;
@@ -100,41 +104,38 @@ public class UserServiceImpl implements IUserService{
     @Override
     public ServerResponse<String> checkAnswer(String username, String question, String answer) {
         ServerResponse<String> responseName = checkValid(username, Const.USERNAME);
-        if (!responseName.isSuccess()){
+        if (responseName.isSuccess()){
             return ServerResponse.createError("用户不存在");
         }
 
         int checkAnswer = userMapper.checkAnswer(username, question, answer);
         if (checkAnswer>0){
-            //说明问题及问题答案是这个用户的,并且是正确的。添加token到缓存
+            //说明问题及问题答案是这个用户的,并且是正确的。添加token到redis缓存(guvva缓存)
             String forgetToken = UUID.randomUUID().toString();
-            TokenCache.setKey(TokenCache.TOKEN_PREFIX+username,forgetToken);
+            ShardRedisPoolUtil.setEx(TOKEN_PREFIX+username,forgetToken,30*60*12);
+//            TokenCache.setKey(TokenCache.TOKEN_PREFIX+username,forgetToken);
             return ServerResponse.createSuccess(forgetToken);
         }
-
         return ServerResponse.createError("问题的答案错误");
-
     }
 
     @Override
     public ServerResponse<String> forgetResetPassword(String username, String passwordNew, String forgetToken) {
-
-        if(org.apache.commons.lang3.StringUtils.isBlank(forgetToken)){
+        if(StringUtils.isBlank(forgetToken)){
             return ServerResponse.createError("参数错误,token需要传递");
         }
-
         ServerResponse validResponse = this.checkValid(username,Const.USERNAME);
         if(validResponse.isSuccess()){
             //用户不存在
             return ServerResponse.createError("用户不存在");
         }
-        String token = TokenCache.getKey(TokenCache.TOKEN_PREFIX+username);
-        if(org.apache.commons.lang3.StringUtils.isBlank(token)){
+        String token =ShardRedisPoolUtil.get(TOKEN_PREFIX+username);
+//        String token = TokenCache.getKey(TokenCache.TOKEN_PREFIX+username);
+        if(StringUtils.isBlank(token)){
             return ServerResponse.createError("token无效或者过期");
         }
-
         /**/
-        if(org.apache.commons.lang3.StringUtils.equals(forgetToken,token)){
+        if(StringUtils.equals(forgetToken,token)){
             String md5Password  = MD5Util.MD5EncodeUtf8(passwordNew);
             int rowCount = userMapper.updatePasswordByUsername(username,md5Password);
             if(rowCount > 0){

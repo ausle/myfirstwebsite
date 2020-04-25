@@ -1,5 +1,7 @@
 package com.asule.common;
 
+import java.sql.Time;
+
 /**
  * created by asule on 2020-01-18 13:22
  */
@@ -26,6 +28,11 @@ public class Const {
         int ROLE_ADMIN=0;
         int NORMAL_USER=1;
 
+    }
+
+    public interface RedisExpieTime{
+
+        int expireNormalTime=60*30;   //30分钟
     }
 
     public enum OrderStatusEnum{
